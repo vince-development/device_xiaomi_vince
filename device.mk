@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017-2021 The LineageOS Project
+# Copyright (C) 2017-2022 The LineageOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -10,6 +10,10 @@ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay/packages/apps/CarrierConfig
+
+# Boot animation
+TARGET_SCREEN_HEIGHT := 2160
+TARGET_SCREEN_WIDTH := 1080
 
 # Screen density
 PRODUCT_AAPT_CONFIG := normal
@@ -87,6 +91,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
 	$(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
+        $(LOCAL_PATH)/audio/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
+        $(LOCAL_PATH)/audio/mixer_paths_mtp.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths_mtp.xml \
 	frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration.xml \
 	frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
 	frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
@@ -111,10 +117,15 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-service
 
 PRODUCT_PACKAGES += \
-    libstdc++.vendor
+    libstdc++.vendor \
+    camera.msm8953 \
+    libmm-qcamera \
+    libdng_sdk.vendor
 
+# Consumer IR
 PRODUCT_PACKAGES += \
-    Snap
+    android.hardware.ir@1.0-impl \
+    android.hardware.ir@1.0-service
 
 # Display
 PRODUCT_PACKAGES += \
@@ -150,20 +161,30 @@ PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-service \
     android.hardware.drm@1.3-service.clearkey
 
+# Fingerprint
+PRODUCT_PACKAGES += \
+    android.hardware.biometrics.fingerprint@2.1
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
+
 # FM
 PRODUCT_PACKAGES += \
     FMRadio \
     libfmjni
+
+# Gatekeeper
+PRODUCT_PACKAGES += \
+    android.hardware.gatekeeper@1.0-impl \
+    android.hardware.gatekeeper@1.0-service
 
 # Health
 PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
     android.hardware.health@2.1-service
 
-ifneq ($(AB_OTA_UPDATER),true)
 PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl.recovery
-endif
 
 # HIDL
 PRODUCT_PACKAGES += \
@@ -180,6 +201,11 @@ PRODUCT_PACKAGES += \
 # IMS
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.camera.device@1.0
+
+# Keymaster
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@3.0-impl \
+    android.hardware.keymaster@3.0-service
 
 # HW crypto
 PRODUCT_PACKAGES += \
@@ -285,6 +311,11 @@ PRODUCT_PACKAGES += \
     libcnefeatureconfig \
     libxml2
 
+# Rootdir
+PRODUCT_PACKAGES += \
+    init.recovery.qcom.rc \
+    init.vince.rc
+
 # Sensors
 PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
@@ -361,4 +392,4 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 # Inherit the proprietary files
-$(call inherit-product, vendor/xiaomi/msm8953-common/msm8953-common-vendor.mk)
+$(call inherit-product, vendor/xiaomi/vince/vince-vendor.mk)
