@@ -5,7 +5,6 @@
 #
 
 DEVICE_PATH := device/xiaomi/vince
-TARGET_KERNEL_VERSION := 4.9
 
 # Architecture
 TARGET_ARCH := arm64
@@ -31,7 +30,8 @@ BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE :=  2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
 
-TARGET_KERNEL_CONFIG := vince_defconfig
+TARGET_KERNEL_VERSION := 4.9
+TARGET_KERNEL_CONFIG := vince-perf_defconfig
 TARGET_KERNEL_SOURCE := kernel/xiaomi/vince
 TARGET_KERNEL_CLANG_COMPILE := true
 
